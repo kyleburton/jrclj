@@ -34,7 +34,7 @@ NB: you will have to require the clojure jar file.
 
 h2. Usage
 
-The interface is exposed via the class <code>JRClj</code>, which acts similarly to a namespace for the clojure functions.  It automatically imports the clojure.core namespace, so all of its functions will be available on each instance of <code>JRClj</code>.
+The interface is exposed via the class <code>JRClj</code>, which acts like a namespace for the clojure functions.  It automatically imports the clojure.core namespace, so all of its functions will be available on each instance of <code>JRClj</code>.
 
 <pre class="code">
 core = JRClj.new
