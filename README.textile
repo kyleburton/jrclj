@@ -1,0 +1,109 @@
+h1. JRuby Clojure Bridge
+
+This is an adapter library for easily executing clojure from JRuby.
+
+h2. Installation
+
+This library is available to be installed via gem:
+
+<pre class="code">
+gem install jrclj
+</pre>
+
+Note that you will also need JRuby, the clojure jar and any jar files your code depends on.
+
+h2. Source Code
+
+The source code for this project is available on "github":/Users/kburton/personal/projects/jrclj.  The source archive includes rspec tests and a few dependent jars, which may help you answer questions that this guide does not.
+
+h2. Dependencies
+
+You must have clojure and any other dependent libraries you wish to use already present (downloaded).  I thought about shipping the clojure jar with the project as a default but then decided against it since it would end up embedding a fixed version of clojure within the gem.
+
+Once you have access to your own jar files, you will first need to require them.  The library does not do this for you, it can not know what dependencies you will need.  The following code will do that if you have your dependencies in a sub directory called 'deps':
+
+<pre class="code">
+  require 'java'
+  Dir["#{File.dirname(__FILE__)}/deps/*.jar"].each do |jar|
+    puts "requiring: #{jar}"
+    require jar
+  end
+</pre>
+
+NB: you will have to require the clojure jar file.
+
+h2. Usage
+
+The interface is exposed via the class <code>JRClj</code>, which acts similarly to a namespace for the clojure functions.  It automatically imports the clojure.core namespace, so all of its functions will be available on each instance of <code>JRClj</code>.
+
+<pre class="code">
+core = JRClj.new
+
+puts core.inc 3
+# prints '4'
+</pre>
+
+h3. Importing Clojure Libraries
+
+You can import other namespaces by passing their names to the constructor:
+
+<pre class="code">
+clj = JRClj.new "clojure.contrib.str-utils"
+
+puts clj.str_join ":", [1,2,3]
+# prints '1:2:3'
+</pre>
+
+You can also import a clojure namespace on an already constructed <code>JRClj</code> instance by calling <code>_import</code>:
+
+<pre class="code">
+clj = JRClj.new
+clj._import "clojure.contrib.str-utils"
+
+puts clj.str_join ":", [1,2,3]
+# prints '1:2:3'
+</pre>
+
+h3. Dealing with Strangely Named Clojure Functions
+
+As the str-utils example above showed, the library makes an attempt at mapping clojure symbol names to ruby symbol names.  The str-utils example shows that it 'folds' hyphens to underscores, since hyphens are not legal in ruby variable or function names.  There is no default translation for other characters that clojure supports in symbol names though.  <code>JRClj</code> supports an aliasing feature to allow you to deal with these situations.
+
+The "clj-xpath":http://github.com/kyleburton/clj-xpath library contains symbols with names that are illegal as ruby methods, eg: <code>$x:text</code>.  Using the <code>_alias</code> method on <code>JRClj</code> you can expose these methods, or using <code>_invoke</code> you can call them by their name (as a string):
+
+<pre class="code">
+require 'deps/clj-xpath-1.0.6.jar'
+clj_xpath = JRClj.new 'com.github.kyleburton.clj-xpath'
+
+puts clj_xpath._invoke("$x:text", "//foo", "<foo>bar</foo>")
+# prints 'bar'
+
+clj_xpath._alias "x_txt", "$x:text"
+puts clj_xpath.x_txt("//foo", "<foo>bar</foo>")
+# prints 'bar'
+</pre>
+
+h2. Complete Example
+
+<pre class="code">
+
+user@host ~/projects/jrclj$ ls deps/
+clj-xpath-1.0.6.jar
+clojure-1.0.0.jar
+clojure-contrib-1.0.0.jar
+xalan-2.7.1.jar
+
+user@host ~/projects/jrclj$ cat example.rb
+require 'rubygems'
+require 'java'
+Dir["#{File.dirname(__FILE__)}/deps/*.jar"].each do |jar|
+  require jar
+end
+require 'jrclj'
+
+clj = JRClj.new
+puts "clj.inc: #{clj.inc 99}"
+
+user@host ~/projects/jrclj$ jruby example.rb
+clj.inc: 100
+</pre>
+
