@@ -4,10 +4,10 @@ This is an adapter library for easily executing clojure from JRuby.
 
 h2. Installation
 
-This library is available to be installed via gem:
+This library is available to be installed via jgem:
 
 <pre class="code">
-gem install jrclj
+jgem install jrclj
 </pre>
 
 Note that you will also need JRuby, the clojure jar and any jar files your code depends on.
