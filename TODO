@@ -1,0 +1,11 @@
+* Add a 'default ns' to JRClj so method_missing can do lookups
+* Pass a ruby proc/block into a clojure function and call it
+* Expose Clojure's lambdas / Expose Clojure's fn in an easy to use api
+* Expose Clojure's STM primitives in an easy to use api
+* Think about clojure's lazy evaluation and how to leverage it
+  from Ruby
+* expose a string based eval from clojure
+* expose some of clojure's persistent data strucutres (like the map, vector, etc)
+* converter clojure map <=> ruby map
+* converter clojure array <=> ruby array
+* converter for ruby symbols <=> clojure symbols

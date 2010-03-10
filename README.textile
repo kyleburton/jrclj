@@ -82,6 +82,48 @@ puts clj_xpath.x_txt("//foo", "<foo>bar</foo>")
 # prints 'bar'
 </pre>
 
+h3. Interactive JRuby + Clojure : IRB
+
+Given that you have a project with a lib directory (containing Ruby code) and a deps directory (containing Java jar dependencies). Placing the following script into a <code>jrepl</code> file and making it executable will give you an IRB with the necessary libraries available.
+
+<pre class="code">
+#!/usr/bin/env jruby
+require 'rubygems'
+require 'java'
+# given that your files are in ./deps (relative to the location of this file)
+Dir["#{File.dirname(__FILE__)}/deps/*.jar"].each do |jar|
+  require jar
+end
+# and you have a ./lib directory (again, realtive to this file)
+$:.unshift "#{File.dirname(__FILE__)}/lib"
+require 'jrclj'
+
+require 'jruby'
+JRuby.objectspace = true
+
+require "irb"
+IRB.start(__FILE__)
+</pre>
+
+h3. Using Clojure's Eval
+
+Clojure's eval does not work on strings.  You must first invoke Clojure's reader to transform a string into a Clojure data strucutre which can then be evaluated.
+
+<pre class="code">
+>> clj = JRClj.new
+>> clj.eval clj.read_string "(+ 3 4)"
+>> s = clj.eval clj.read_stirng ":symbol"
+>> s.methods - Object.methods
+=> ["__jsend!", "applyTo", "applyTo__method", "apply_to", "apply_to__method", "between?", "call", "call__method", "class__method", "clone__method", "compareTo", "compareTo__method", "compare_to", "compare_to__method", "equals", "equals?", "equals__method", "equals__method?", "finalize", "finalize__method", "getClass", "getClass__method", "getName", "getName__method", "getNamespace", "getNamespace__method", "get_class", "get_class__method", "get_name", "get_name__method", "get_namespace", "get_namespace__method", "hashCode", "hashCode__method", "hash_code", "hash_code__method", "initialize", "invoke", ...
+>> s.to_sring
+=> ":symbol"
+>> s.name
+=> "symbol"
+>> s.invoke clj.eval(clj.read_string "{:symbol \"value\"}")
+=> "value"
+>>
+</pre>
+
 h2. Complete Example
 
 <pre class="code">

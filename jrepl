@@ -1,0 +1,22 @@
+#!/usr/bin/env jruby
+require 'rubygems'
+require 'java'
+Dir["#{File.dirname(__FILE__)}/deps/*.jar"].each do |jar|
+  require jar
+end
+$:.unshift "#{File.dirname(__FILE__)}/lib"
+require 'jrclj'
+
+clj = JRClj.new
+puts "clj.inc: #{clj.inc 99}"
+#import 'clojure.lang.Repl'
+#Repl.main Java::JavaLang::String.new("").split("")
+
+
+# stolen direclty from jirb
+require 'jruby'
+# useful for code completion
+JRuby.objectspace = true
+
+require "irb"
+IRB.start(__FILE__)
