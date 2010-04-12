@@ -1,10 +1,10 @@
 #!/usr/bin/env jruby
 require 'rubygems'
 require 'java'
-Dir["#{File.dirname(__FILE__)}/deps/*.jar"].each do |jar|
+Dir["#{File.dirname(File.dirname(__FILE__))}/deps/*.jar"].each do |jar|
   require jar
 end
-$:.unshift "#{File.dirname(__FILE__)}/lib"
+$:.unshift "#{File.dirname(File.dirname(__FILE__))}/lib"
 require 'jrclj'
 
 clj = JRClj.new

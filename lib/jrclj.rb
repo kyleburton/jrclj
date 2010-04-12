@@ -2,6 +2,7 @@ require 'java'
 
 #Dir["#{File.dirname(__FILE__)}/*.jar"].each { |jar| puts "requiring: #{jar}"; require jar }
 import "clojure.lang.RT"
+import "clojure.lang.Var"
 
 class JRClj
   def initialize *pkgs
@@ -46,6 +47,41 @@ class JRClj
 
   def self.persistent_map entries=[]
     Java::ClojureLang::PersistentArrayMap.new entries.to_java
+  end
+
+  def _val ns, var=nil
+    unless var
+      var = ns
+      ns = "clojure.core"
+    end
+    # (var-get (clojure.lang.RT/var (str *ns*), "x"))
+    # puts "Looking up #{ns} / #{var}"
+    self.var_get RT.var(ns,var)
+  end
+
+  def _binding vars={}
+    # the macro expansion of (binding [x 3] x) is:
+    # (do
+    #   (. clojure.lang.Var (clojure.core/pushThreadBindings (clojure.core/hash-map (var x) 3)))
+    #   (try
+    #    x
+    #    (finally (. clojure.lang.Var (clojure.core/popThreadBindings)))))
+
+    kv_pairs = []
+    vars.each do |k,v|
+      kv_pairs << RT.var("user",k)
+      kv_pairs << v
+    end
+    # $stderr.puts "kv_pairs (#{kv_pairs.inspect})"
+    hm = self.apply RT.var('clojure.core','hash-map'), kv_pairs
+    # $stderr.puts "pushing thread bindings (#{hm})"
+    Var.pushThreadBindings hm
+    pushed = true
+    # $stderr.puts "pushed thread bindings (#{hm})"
+    yield self
+  ensure
+    # $stder.puts "in the ensure block"
+    Var.popThreadBindings if pushed
   end
 end
 
