@@ -1,7 +1,7 @@
 require 'java'
 
 #Dir["#{File.dirname(__FILE__)}/*.jar"].each { |jar| puts "requiring: #{jar}"; require jar }
-import "clojure.lang.RT"
+java_import "clojure.lang.RT"
 
 class JRClj
   def initialize *pkgs
