@@ -14,7 +14,7 @@ Note that you will also need JRuby, the clojure jar and any jar files your code 
 
 h2. Source Code
 
-The source code for this project is available on "github":/Users/kburton/personal/projects/jrclj.  The source archive includes rspec tests and a few dependent jars, which may help you answer questions that this guide does not.
+The source code for this project is available on "github":https://github.com/kyleburton/jrclj.  The source archive includes rspec tests and a few dependent jars, which may help you answer questions that this guide does not.
 
 h2. Dependencies
 
