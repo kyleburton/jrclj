@@ -15,7 +15,7 @@ class JRClj
     end
   end
 
-  def _import pkg_name, sym=nil, sym_alais=nil
+  def _import pkg_name, sym=nil, sym_alias=nil
     @require.invoke @symbol.invoke(pkg_name)
     if sym
       sym_alias ||= sym
