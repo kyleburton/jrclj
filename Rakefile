@@ -1,13 +1,13 @@
 require 'rubygems'
 require 'rake'
-require 'rake/gempackagetask'
+require 'rubygems/package_task'
 require 'spec/rake/spectask'
 load 'jrclj.gemspec'
  
 SPEC_FILES = FileList['spec/*_spec.rb']
  
 task :default => :spec
- 
+
 desc "Run all specs"
 Spec::Rake::SpecTask.new('spec') do |t|
   $:.push "#{File.dirname(__FILE__)}/lib"
@@ -24,6 +24,7 @@ Spec::Rake::SpecTask.new('rcov') do |t|
   t.rcov_opts = ['--exclude', 'spec']
 end
  
-Rake::GemPackageTask.new($spec) do |t|
+#Rake::GemPackageTask.new($spec) do |t|
+Gem::PackageTask.new($spec) do |t|
   t.need_tar = true
 end
