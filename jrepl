@@ -1,9 +1,12 @@
 #!/usr/bin/env jruby
 require 'rubygems'
 require 'java'
-Dir["#{File.dirname(__FILE__)}/deps/*.jar"].each do |jar|
-  require jar
-end
+# Set up gems listed in the Gemfile.
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __FILE__)
+require 'bundler/setup'
+#Dir["#{File.dirname(__FILE__)}/deps/*.jar"].each do |jar|
+#  require jar
+#end
 $:.unshift "#{File.dirname(__FILE__)}/lib"
 require 'jrclj'
 
