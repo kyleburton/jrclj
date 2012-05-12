@@ -1,8 +1,5 @@
 require 'java'
 
-#Dir["#{File.dirname(__FILE__)}/*.jar"].each { |jar| puts "requiring: #{jar}"; require jar }
-require 'mvn:org.clojure:clojure'
-require 'mvn:xalan:xalan'
 java_import "clojure.lang.RT"
 
 class JRClj
@@ -28,6 +25,10 @@ class JRClj
     @ns_map.invoke(pkg).each do |sym,var|
       @mappings[sym.to_s] = var
     end
+  end
+
+  def _eval s
+    self.eval self.read_string(s)
   end
 
   def _invoke m, *args

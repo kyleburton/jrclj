@@ -50,4 +50,26 @@ namespace :jruby do
       end
     end
   end
+
+  # desc "donwload dependencies for examples"
+  # task :deps do
+  #   Dir.chdir "deps" do
+  #     # http://repo1.maven.org/maven2/org/clojure/clojure/1.4.0/clojure-1.4.0.zip
+  #     %w[http://repo1.maven.org/maven2/org/clojure/clojure/1.3.0/clojure-1.3.0.zip].each do |url|
+  #       unless File.exist? File.basename(url)
+  #         system "wget", url
+  #       end
+  #     end
+  #   end
+  # end
+
+  desc "run JRuby irb"
+  task :irb do |t,args|
+    system "./software/jruby-1.6.7.2/bin/jruby", "-I", "lib", "./software/jruby-1.6.7.2/bin/jirb"
+  end
+
+  desc "run a JRuby script"
+  task :run, :script do |t,args|
+    system "./software/jruby-1.6.7.2/bin/jruby", "-I", "lib", args[:script]
+  end
 end
