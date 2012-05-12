@@ -10,6 +10,7 @@ GEM
 
 PLATFORMS
   java
+  ruby
 
 DEPENDENCIES
   mvn:org.clojure:clojure (~> 1.3.0)

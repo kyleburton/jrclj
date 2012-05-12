@@ -1,4 +1,4 @@
-#!/usr/bin/env jruby
+#!./software/jruby-1.6.7.2/bin/jruby
 require 'rubygems'
 require 'java'
 # Set up gems listed in the Gemfile.
