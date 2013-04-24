@@ -9,67 +9,45 @@ rescue
 end
  
 SPEC_FILES = FileList['spec/*_spec.rb']
- 
-# task :default => :spec
-# 
-# desc "Run all specs"
-# RSpec::Core::RakeTask.new('spec') do |t|
-#   $:.push "#{File.dirname(__FILE__)}/lib"
-#   Dir["#{File.dirname(__FILE__)}/deps/*.jar"].each do |jar|
-#     require jar
-#   end
-#   t.pattern = 'spec/*_spec.rb'
-# end
-#  
-# desc "Run rcov"
-# RSpec::Core::RakeTask.new('rcov') do |t|
-#   t.pattern = 'spec/*_spec.rb'
-#   t.rcov = true
-#   t.rcov_opts = ['--exclude', 'spec']
-# end
-#  
-# #Rake::GemPackageTask.new($spec) do |t|
-# Gem::PackageTask.new($spec) do |t|
-#   t.need_tar = true
-# end
+
+$jruby_version = "1.7.3"
 
 namespace :jruby do
   desc "install jruby"
   task :install do
-    url = "http://jruby.org.s3.amazonaws.com/downloads/1.6.7.2/jruby-bin-1.6.7.2.tar.gz"
+    url = "http://jruby.org.s3.amazonaws.com/downloads/#{$jruby_version}/jruby-bin-#{$jruby_version}.tar.gz" # "http://jruby.org.s3.amazonaws.com/downloads/1.6.7.2/jruby-bin-1.6.7.2.tar.gz"
+    fname = File.basename(url)
     unless File.exist? "software"
       FileUtils.mkdir "software"
     end
     Dir.chdir("software") do
       unless File.exist? File.basename(url)
-        system "wget", url
+        unless system "wget", url 
+          raise "Error executing wget #{url} : #$!"
+        end
       end
 
-      unless File.exist? "jruby-1.6.7.2"
-        system "tar", "xzf", File.basename(url)
+      unless File.exist? File.basename(fname, ".tar.gz")
+        unless system "tar", "xzf", fname
+          raise "Error extracting tar: #$!"
+        end
       end
     end
   end
 
-  # desc "donwload dependencies for examples"
-  # task :deps do
-  #   Dir.chdir "deps" do
-  #     # http://repo1.maven.org/maven2/org/clojure/clojure/1.4.0/clojure-1.4.0.zip
-  #     %w[http://repo1.maven.org/maven2/org/clojure/clojure/1.3.0/clojure-1.3.0.zip].each do |url|
-  #       unless File.exist? File.basename(url)
-  #         system "wget", url
-  #       end
-  #     end
-  #   end
-  # end
-
   desc "run JRuby irb"
   task :irb do |t,args|
-    system "./software/jruby-1.6.7.2/bin/jruby", "-I", "lib", "./software/jruby-1.6.7.2/bin/jirb"
+    cmd =  "./software/jruby-#{$jruby_version}/bin/jruby -I lib ./software/jruby-#{$jruby_version}/bin/jirb"
+    unless system cmd
+      raise "Error executing jirb: #$! [#{cmd}]"
+    end
   end
 
   desc "run a JRuby script"
   task :run, :script do |t,args|
-    system "./software/jruby-1.6.7.2/bin/jruby", "-I", "lib", args[:script]
+    cmd = "./software/jruby-#{$jruby_version}/bin/jruby -I lib #{args[:script]}"
+    unless system cmd
+      raise "Error executing jruby: #$! [#{cmd}]"
+    end
   end
 end

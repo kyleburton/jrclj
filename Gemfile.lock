@@ -1,12 +1,21 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    diff-lcs (1.2.4)
     mvn:org.clojure:clojure (1.3.0-java)
     mvn:xalan:serializer (2.7.1-java)
       mvn:xml-apis:xml-apis (~> 1.0.a)
     mvn:xalan:xalan (2.7.1-java)
       mvn:xalan:serializer (~> 2.0.a)
     mvn:xml-apis:xml-apis (1.4.01-java)
+    rspec (2.13.0)
+      rspec-core (~> 2.13.0)
+      rspec-expectations (~> 2.13.0)
+      rspec-mocks (~> 2.13.0)
+    rspec-core (2.13.1)
+    rspec-expectations (2.13.0)
+      diff-lcs (>= 1.1.3, < 2.0)
+    rspec-mocks (2.13.1)
 
 PLATFORMS
   java
@@ -15,3 +24,4 @@ PLATFORMS
 DEPENDENCIES
   mvn:org.clojure:clojure (~> 1.3.0)
   mvn:xalan:xalan (~> 2.7.1)
+  rspec
